@@ -25,7 +25,7 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                deploy adapters: [tomcat9(credentialsId: 'Tomcat9', path: 'http://13.126.17.134:8080/manager/html', url: 'http://13.126.17.134:8080/')], war: '**/*.war'
+                cp /target/LoginWebApp.war /home/ec2-user/apache-tomcat-9.0.78/webapps
             }
         }
     }
