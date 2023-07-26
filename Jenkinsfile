@@ -1,46 +1,33 @@
 pipeline {
-agent {
-label {
-		label "built-in"
-		customWorkspace "/data/project-myapp"
-		
-		}
-		}
-		
-	stages {
-		
-		stage ('CLEAN_OLD_M2') {
-			
-			steps {
-				sh "rm -rf /home/saccount/.m2/repository"
-				
-			}
-			
-		}
-	
-		stage ('MAVEN_BUILD') {
-		
-			steps {
-						
-						sh "mvn clean package"
-			
-			}
-			
-		
-		}
-		
-		stage ('COPY_WAR_TO_Server'){
-		
-				steps {
-						
-						sh "scp -r target/LoginWebApp.war /home/ec2-user/apache-tomcat-9.0.78/webapps"
+    agent any
 
-						}
-				
-				}
-	
-	
-	
-	}
-		
+    stages {
+        stage('SCM') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('SonarQubeScan') {
+            steps {
+		    def mvn = tool 'Default Maven';
+		    withSonarQubeEnv( 'SonarQube Server' ) {
+                    sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=database-project -Dsonar.projectName='database-project'"
+                }    
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Run Maven on a Unix agent.
+                sh "mvn clean package"
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                deploy adapters: [tomcat9(credentialsId: 'Tomcat9', path: '', url: 'http://13.126.17.134:8080')], contextPath: null, onFailure: false, war: '**/*.war'
+            }
+        }
+    }
 }
