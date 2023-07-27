@@ -11,7 +11,7 @@ pipeline {
         stage('SonarQubeScan') {
             steps {
 		    withSonarQubeEnv( 'SonarQube Server' ) {
-                    sh "/usr/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=database-project -Dsonar.projectName='database-project'"
+                    sh "/usr/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=database -Dsonar.projectName='database'"
                     }    
 	}
         }
