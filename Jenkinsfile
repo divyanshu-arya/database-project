@@ -10,7 +10,7 @@ pipeline {
         
         stage('SonarQubeScan') {
             steps {
-		    withSonarQubeEnv( 'SonarQube Server' ) {
+		    withSonarQubeEnv( 'Divyanshu Arya' ) {
                     sh "/usr/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=database-project -Dsonar.projectName='database-project'"
                     }    
 	}
