@@ -25,7 +25,8 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                sh "cp target/LoginWebApp.war /home/ec2-user/apache-tomcat-9.0.78/webapps"
+                sh "docker build -t tomcat-image . "
+		sh " docker run -d -p 8085:8080 tomcat-image:latest"
             }
         }
     }
