@@ -26,7 +26,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh "docker build -t tomcat-image . "
-		sh " docker run -rm -p 8085:8080 tomcat-image:latest"
+		sh " docker run -it --rm -p 8085:8080 tomcat-image:latest"
             }
         }
     }
